@@ -1,0 +1,7 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pyni Pterodactyl</title><link rel="stylesheet" href="style.css"></head><body>
+<aside><h1>🟣 Pyni</h1><small>Pterodactyl</small><button data-p="dash">Dashboard</button><button data-p="servers">Servers</button><button data-p="console">Console</button></aside>
+<main><header><button id="menu">☰</button><h2 id="title">Dashboard</h2></header>
+<section id="dash" class="page"><div class="hero"><b>PYNI PTERODACTYL</b><h1>Server Management</h1><p>Panel mandiri untuk menjalankan project pada runtime yang lu kontrol.</p></div><div class="cards"><div>Servers<strong id="count">0</strong></div><div>Status<strong id="status">—</strong></div></div></section>
+<section id="servers" class="page hidden"><div class="bar"><input id="newId" placeholder="nama-server"><button onclick="createServer()">+ Create</button><button onclick="load()">↻ Refresh</button></div><div id="list"></div></section>
+<section id="console" class="page hidden"><div class="bar"><select id="sel"></select><input id="cmd" placeholder="command, contoh: node index.js"><button onclick="start()">Start</button><button onclick="stop()">Stop</button><button onclick="restart()">Restart</button></div><pre id="log">Pilih server.</pre><div class="bar"><input id="line" placeholder="console command"><button onclick="send()">Send</button></div></section>
+</main><script src="app.js"></script></body></html>

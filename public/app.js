@@ -1,0 +1,12 @@
+async function api(u,o){let r=await fetch(u,{headers:{"Content-Type":"application/json"},...o});let d=await r.json();if(!r.ok)throw Error(d.error||"Request failed");return d}
+let servers=[];const $=x=>document.querySelector(x);
+document.querySelectorAll("aside button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$("#"+b.dataset.p).classList.remove("hidden");$("#title").textContent=b.textContent;load()});
+$("#menu").onclick=()=>document.querySelector("aside").classList.toggle("open");
+async function load(){try{servers=await api("/api/servers");$("#count").textContent=servers.length;$("#list").innerHTML=servers.map(s=>`<div><b>${s.name}</b> <span class="${s.status}">${s.status}</span><div class="server-actions"><button onclick="pick('${s.id}')">Console</button><button onclick="run('${s.id}','start')">Start</button><button onclick="run('${s.id}','stop')">Stop</button></div></div>`).join("")||"<div>No servers.</div>";$("#sel").innerHTML=servers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");$("#status").textContent=servers.some(s=>s.status==="running")?"Running":"Stopped"}catch(e){console.error(e)}}
+async function createServer(){let id=$("#newId").value.trim();if(!id)return;await api("/api/servers",{method:"POST",body:JSON.stringify({id})});$("#newId").value="";load()}
+function pick(id){$("#sel").value=id;document.querySelector('[data-p="console"]').click()}
+async function run(id,action){let command=$("#cmd").value.trim();try{await api(`/api/servers/${id}/${action}`,{method:"POST",body:JSON.stringify({command})});$("#sel").value=id;poll()}catch(e){alert(e.message)}}
+function start(){run($("#sel").value,"start")}function stop(){run($("#sel").value,"stop")}function restart(){run($("#sel").value,"restart")}
+async function poll(){let id=$("#sel").value;if(!id)return;try{$("#log").textContent=(await api(`/api/servers/${id}/logs`)).logs;$("#log").scrollTop=$("#log").scrollHeight}catch{}}
+async function send(){let id=$("#sel").value,c=$("#line").value;if(!c)return;try{await api(`/api/servers/${id}/command`,{method:"POST",body:JSON.stringify({command:c})});$("#line").value="";poll()}catch(e){alert(e.message)}}
+setInterval(poll,1500);load();
